@@ -1,0 +1,27 @@
+<?php
+include 'config.php';
+// Create connection
+$conn = new mysqli($sales_config['db_host'], $sales_config['db_username'], $sales_config['db_password'], 'tenant');
+$message = '';
+if ($conn->connect_error)
+{
+    $message = "Connection failed: " . $conn->connect_error;
+}
+
+if ($message != '')
+{
+	error_log($message);
+}
+
+$sql = "SELECT *
+		FROM access
+		WHERE name='test'";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+
+if ($row['id'] == '')
+{
+	echo "<script>alert('There is no tenant such a ".$URI[2]."')</script>";
+	die();
+}
+

@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'iran';
+  src: url('../fonts/IRANSans(FaNum)_Light.ttf') format('truetype');
+}
+
+*{
+	font-family: 'iran';
+}
+
+@media (min-width: 768px)
+{
+	#wrapper
+	{
+		padding-right: 0px;
+		padding-left: 0;
+	}
+  	
+  	.side-nav
+  	{	right: 0;
+  		left: auto;
+  	}
+	
+	#page-wrapper
+	{
+	    position: inherit;
+	    margin: 0 250px 0 0px;
+	    padding: 0 30px;
+	    border-left: 1px solid #e7e7e7;
+	}
+}
