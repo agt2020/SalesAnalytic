@@ -1,24 +1,15 @@
 <?php
-
+include '../utils.php';
 $result = '';
-
 if (isset($_POST['type']) && $_POST['type'] == 'test_connection')
 {
-	$server = $_POST['address'];
-	$database = $_POST['database'];
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	ini_set('mssql.charset', 'UTF-8');
-	$connection = mssql_connect($server, $username, $password);
-	if(mssql_select_db($database, $connection))
-	{
-		$result = 'OK';
-	}
-	else
-		$result =  'MSSQL error: ' . mssql_get_last_message();
+	$ms_db->server = $_POST['address'];
+	$ms_db->database = $_POST['database'];
+	$ms_db->username = $_POST['username'];
+	$ms_db->password = $_POST['password'];
+	$ms_db->Check_Connection();
+	$result = $ms_db->message;
 }
-
-
 ob_clean();
 echo json_encode($result);
 exit();

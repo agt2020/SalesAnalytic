@@ -24,8 +24,35 @@ $config = $db->config();
     <meta name="author" content="">
 
     <title><?php echo $lang['LBL_PAGE_TITLE']; ?></title>
-
     <!-- Global Style -->
+    <link type="text/css" rel="stylesheet" href="css/kamadatepicker.css"/>
+    <style type="text/css">
+        .rtl-col {
+            float: right;
+        }
+        #bd-next-date2, #bd-prev-date2 {
+            font-size: 20px;
+        }
+        .tooltip > .tooltip-inner {
+            font-family: Vazir;
+            font-size: 12px;
+            padding: 4px;
+            white-space: pre;
+            max-width: none;
+        }
+        #options-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #options-table td, #options-table th {
+            border: 1px solid #777;
+            text-align: left;
+            padding: 8px;
+        }
+        #options-table tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
     <?php
         include 'functions/Global_Style.php';
         echo $global_style;
@@ -75,7 +102,7 @@ $config = $db->config();
                         <div class="col-lg-8">
                             <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> نمودار روند فروش
+                            <i class="fa fa-bar-chart-o fa-fw"></i> فروش بر اساس دپارتمان
                             <div class="pull-left">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -98,7 +125,35 @@ $config = $db->config();
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-area-chart"></div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    تاریخ شروع : <input type="text" id="datestart" name="datestart">
+                                </div>
+                                <div class="col-lg-4">
+                                    تاریخ پایان : <input type="text" id="dateend" name="dateend">
+                                </div>
+                                <div class="col-lg-4">
+                                    <input class="btn btn-primary" type="button" value="نمایش گزارش" onclick="Sp_RptGroupParaSale();">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="table-responsive col-lg-12">
+                                    <table class="table table-bordered table-hover table-striped" id="Sp_RptGroupParaSale">
+                                        <thead>
+                                            <tr>
+                                                <th>کد</th>
+                                                <th>نام محصول</th>
+                                                <th>پارامتر</th>
+                                                <th>قیمت</th>
+                                                <th>تاریخ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -347,8 +402,41 @@ $config = $db->config();
     <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
     <script src="vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="vendor/datatables-responsive/dataTables.responsive.js"></script>
-
     <script src="vendor/js/branches.js"></script>
+    <script src="vendor/js/kamadatepicker/kamadatepicker.js"></script>
+    <script>
+        kamaDatepicker('datestart', { buttonsColor: "red" });
+        var customOptions = {
+            placeholder: "روز / ماه / سال"
+            , twodigit: false
+            , closeAfterSelect: false
+            , nextButtonIcon: "fa fa-arrow-circle-right"
+            , previousButtonIcon: "fa fa-arrow-circle-left"
+            , buttonsColor: "blue"
+            , forceFarsiDigits: true
+            , markToday: true
+            , markHolidays: true
+            , highlightSelectedDay: true
+            , sync: true
+            , gotoToday: true
+        }
+
+        kamaDatepicker('dateend', { buttonsColor: "red" });
+        var customOptions = {
+            placeholder: "روز / ماه / سال"
+            , twodigit: false
+            , closeAfterSelect: false
+            , nextButtonIcon: "fa fa-arrow-circle-right"
+            , previousButtonIcon: "fa fa-arrow-circle-left"
+            , buttonsColor: "blue"
+            , forceFarsiDigits: true
+            , markToday: true
+            , markHolidays: true
+            , highlightSelectedDay: true
+            , sync: true
+            , gotoToday: true
+        }
+    </script>
 </body>
 
 </html>

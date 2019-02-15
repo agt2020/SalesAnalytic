@@ -38,25 +38,42 @@ if (isset($_POST['type']) && $_POST['type'] == 'Remove_Branch')
 if (isset($_POST['type']) && $_POST['type'] == 'Branch_Connection')
 {
 	$branch = $db->GetBranch($_POST['branch_id']);
-    $server = $branch['address'];
-    $database = $branch['db_name'];
-    $username = $branch['username'];
-    $password = $branch['password'];
-    ini_set('mssql.charset', 'UTF-8');
-    $connection = mssql_connect($server, $username, $password);
-    if(!mssql_select_db($database, $connection))
-    {
-        $result = "ارتباط با شعبه ".$branch['name']." برقرار نشد !";
-    }
-    else
-    {
-    	$result = 'OK';
-    }
+    	$ms_db->server = $branch['address'];
+    	$ms_db->database = $branch['db_name'];
+    	$ms_db->username = $branch['username'];
+    	$ms_db->password = $branch['password'];
+    	$ms_db->Check_Connection();
+	if($ms_db->message == 'OK')
+	{
+		$result = 'OK';
+	}
+	else
+	{
+		$result = "ارتباط با شعبه ".$branch['name']." برقرار نشد !";
+	}
 }
 
 if (isset($_POST['type']) && $_POST['type'] == 'get_branch_data')
 {
-	
+	$ms_db->get_branch_data();
+}
+
+if (isset($_POST['type']) && $_POST['type'] == 'Sp_RptGroupParaSale')
+{
+	$branch = $db->GetBranch($_POST['id']);
+    	$ms_db->server = $branch['address'];
+    	$ms_db->database = $branch['db_name'];
+    	$ms_db->username = $branch['username'];
+    	$ms_db->password = $branch['password'];
+    	$ms_db->Check_Connection();
+	if($ms_db->message == 'OK')
+	{
+		$result = $ms_db->Sp_RptGroupParaSale($_POST['start'],$_POST['end']);
+	}
+	else
+	{
+		$result = "ارتباط با شعبه ".$branch['name']." برقرار نشد !";
+	}
 }
 
 

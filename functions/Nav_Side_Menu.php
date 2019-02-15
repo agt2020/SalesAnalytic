@@ -253,13 +253,13 @@ else
 if ($user['is_admin'] == 1 || $access->analytics == 1)
 {
                       $menu .= '<li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>'.$lang['LBL_ANALITYC_CHART'].'<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>'.$lang['LBL_REPORTS'].'<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#">'.$lang['LBL_FLOAT'].'</a>
+                                    <a href="total_reports.php">'.$lang['LBL_TOTAL'].'</a>
                                 </li>
                                 <li>
-                                    <a href="#">'.$lang['LBL_MORIS'].'</a>
+                                    <a href="top10.php">'.$lang['LBL_TOP_10'].'</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

@@ -4,7 +4,7 @@ $URI = explode('/', $_SERVER['REQUEST_URI']);
 
 if ($URI[2] == 'index.php')
 {
-	include "tenant.php";
+	//include "tenant.php";
 }
 
 

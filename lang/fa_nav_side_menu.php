@@ -3,9 +3,9 @@ $lang = array(
 	'LBL_LOGO_TITLE' => 'مدیریت فروش',
 	'LBL_SEARCH' => 'جستجو...',
 	'LBL_DASHBOARD' => 'داشبورد',
-	'LBL_ANALITYC_CHART' => 'تحلیل نموداری',
+	'LBL_REPORTS' => 'گزارشات تحلیلی',
 	'LBL_FLOAT' => 'شناور',
-	'LBL_MORIS' => 'موریس',
+	'LBL_TOTAL' => 'گزارش جامع',
 	'LBL_SALE_TABLES' => 'جداول فروش',
 	'LBL_ORDERS' => 'سفارشات',
 	'LBL_SETTINGS' => 'تنظیمات',
@@ -32,4 +32,5 @@ $lang = array(
 	'LBL_EXIT' => 'خروج',
 	'LBL_ALL_MESSAGE' => 'خواندن همه',
 	'LBL_ALL_NOTIF' => 'نمایش همه اعلانات',
+	'LBL_TOP_10' => 'ده محصول برتر',
 	);
