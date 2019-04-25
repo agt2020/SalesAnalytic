@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 $lang = array(
 	'LBL_LOGO_TITLE' => 'مدیریت فروش',
@@ -35,4 +36,41 @@ $lang = array(
 	'LBL_TOP_10' => 'ده محصول برتر',
 	'LBL_INVOICES' => 'فاکتور های فروش',
 	'LBL_REFOUNDED_INVOICES' => 'فاکتور های برگشتی',
+=======
+<?php
+$lang = array(
+	'LBL_LOGO_TITLE' => 'مدیریت فروش',
+	'LBL_SEARCH' => 'جستجو...',
+	'LBL_DASHBOARD' => 'داشبورد',
+	'LBL_REPORTS' => 'گزارشات تحلیلی',
+	'LBL_FLOAT' => 'شناور',
+	'LBL_TOTAL' => 'گزارش جامع',
+	'LBL_SALE_TABLES' => 'جداول فروش',
+	'LBL_ORDERS' => 'سفارشات',
+	'LBL_SETTINGS' => 'تنظیمات',
+	'LBL_DATABASE' => 'پایگاه داده',
+	'LBL_SETTINGS' => 'تنظیمات',
+	'LBL_LEDGER' => 'دفتر کل',
+	'LBL_BRANCHES' => 'مدیریت شعب',
+	'LBL_ACCOUNTS' => 'حساب ها',
+	'LBL_INVENTORY' => 'انبار',
+	'LBL_ACCESS' => 'دسترسی ها',
+	'LBL_USERS' => 'کاربران',
+	'LBL_BRANCHS' => 'شعب و مراکز فروش',
+	'LBL_TEHRAN_PRO' => 'استان تهران',
+	'LBL_GILAN_PRO' => 'استان گیلان',
+	'LBL_MAZANDARAN_PRO' => 'استان مازندران',
+	'LBL_RAMSAR' => 'رامسر',
+	'LBL_CHALOUS' => 'چالوس',
+	'LBL_NOOR' => 'نور',
+	'LBL_MAHMOOD_ABAD' => 'محمود آباد',
+	'LBL_DOCUMENTS' => 'اسناد',
+	'LBL_BUY' => 'خرید',
+	'LBL_SALE' => 'فروش',
+	'LBL_PROFILE' => 'پروفایل',
+	'LBL_EXIT' => 'خروج',
+	'LBL_ALL_MESSAGE' => 'خواندن همه',
+	'LBL_ALL_NOTIF' => 'نمایش همه اعلانات',
+	'LBL_TOP_10' => 'ده محصول برتر',
+>>>>>>> 056b6ff91a612d664487faaced7f580809852a02
 	);
