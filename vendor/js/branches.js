@@ -1,5 +1,4 @@
 // ADDED BY Abolfaz Ghaffari - 2019-01
-
 $(document).ready(function() {
 	if ($('#page').val() == 'list')
 	{
@@ -9,6 +8,7 @@ $(document).ready(function() {
 	{
 		Branch_Connection($('#record').val());
 	}
+	//report();
 });
 
 
@@ -27,7 +27,6 @@ function Get_Branches_list()
 		error: function(resp){},
 		success: function(resp){
 			$('.loader').hide();
-			console.log(resp);
 			BranchesList(resp);
 		}
 	});
@@ -97,37 +96,66 @@ function Null_Check(variable)
 
 function Save_Branch()
 {
-	$('.loader').show();
-	var data = {
-		type: 'save_branches',
-		name: $('#name').val(),
-		is_parent: $("#is_parent option:selected").val(),
-		address: $('#address').val(),
-		db_name: $('#database').val(),
-		username: $('#username').val(),
-		password: $('#password').val(),
-		parent: $('#parent_id').val(),
-	};
-	$.ajax({
-		url: 'ajaxFiles/branches.php',
-		type: 'POST',
-		data: data,
-		async: true,
-		dataType: 'json',
-		error: function(resp){},
-		success: function(resp){
-			$('.loader').hide();
-			if(resp != '')
-			{
-				location.reload();
+	if ($('#name').val() == null || $('#name').val() == '')
+	{
+		alert('نام شعبه نمی تواند خالی باشد !');
+	}
+	else if($('#address').val() == null || $('#address').val() == '')
+	{
+		alert('آدرس ip شعبه نمی تواند خالی باشد !');
+	}
+	else if($('#database').val() == null || $('#database').val() == '')
+	{
+		alert('نام پایگاه داده نمی تواند خالی باشد !');
+	}
+	else if($('#username').val() == null || $('#username').val() == '')
+	{
+		alert('نام کاربری اتصال به پایگاه داده نمی تواند خالی باشد !');
+	}
+	else if($('#password').val() == null || $('#password').val() == '')
+	{
+		alert('رمز عبور اتصال به پایگاه داده نمی تواند خالی باشد !');
+	}
+	else
+	{
+		$('.loader').show();
+		var data = {
+			type: 'save_branches',
+			name: $('#name').val(),
+			is_parent: $("#is_parent option:selected").val(),
+			address: $('#address').val(),
+			db_name: $('#database').val(),
+			username: $('#username').val(),
+			password: $('#password').val(),
+			parent: $('#parent_id').val(),
+		};
+		$.ajax({
+			url: 'ajaxFiles/branches.php',
+			type: 'POST',
+			data: data,
+			async: true,
+			dataType: 'json',
+			error: function(resp){},
+			success: function(resp){
+				$('.loader').hide();
+				if(resp == 'OK')
+				{
+					location.reload();
+				}
+				else if(resp == 'NOK')
+				{
+					$('.loader').hide();
+					alert('ؤتاباط با شعبه برقرار نشد !');
+				}
+				else
+				{
+					$('.loader').hide();
+					alert('خطا در ثبت شعبه جدید !');
+				}
 			}
-			else
-			{
-				alert('خطا در ثبت شعبه جدید !');
-			}
-		}
-	});
-}
+		});
+	}
+}	
 
 
 function BranchesList(data)
@@ -152,12 +180,12 @@ function BranchesList(data)
 	$('#tbody_list').append(tbody);
 	var datatable = $('#users_table').DataTable({
 		info: false,
-        lengthMenu: [ 5, 10],
+        lengthMenu: [ 5, 10, 100],
         pagingType: "full_numbers",
         scroller:  true,
         responsive: true,
         language: {
-                "emptyTable":     "فاکتوری یافت نشد !",
+                "emptyTable":     "داده یافت نشد !",
                 "loadingRecords": "در حال خواند اطلاعات",
                 "processing":     "در حال پردازش",
                 "search":         "جستجو ",
@@ -170,7 +198,7 @@ function BranchesList(data)
                     "previous":   "قبلی"
                 },
             }
-    });
+    	});
 }
 
 function Parent_List()
@@ -208,4 +236,114 @@ function Branch_Connection(id)
 			}
 		}
 	});
+}
+
+function report()
+{
+	var data = {
+		type: 'get_branch_data',
+		id: $('#record').val(),
+	};
+	$.ajax({
+		url: 'ajaxFiles/branches.php',
+		type: 'POST',
+		data: data,
+		async: true,
+		dataType: 'json',
+		error: function(resp){},
+		success: function(resp){
+			$('.loader').hide();
+		}
+	});
+	var datatable = $('#Sp_RptGroupParaSale').DataTable({
+	info: false,
+        lengthMenu: [ 5, 10],
+        pagingType: "full_numbers",
+        scroller:  true,
+        responsive: true,
+        language: {
+                "emptyTable":     "داده یافت نشد !",
+                "loadingRecords": "در حال خواند اطلاعات",
+                "processing":     "در حال پردازش",
+                "search":         "جستجو ",
+                "zeroRecords":    "موردی یافت نشد !",
+                "lengthMenu":     "نمایش _MENU_ سطر در هر صفحه",
+                "paginate": {
+                    "first":      "اولین",
+                    "last":       "آخرین",
+                    "next":       "بعدی",
+                    "previous":   "قبلی"
+                },
+            }
+    	});
+}
+
+function Sp_RptGroupParaSale()
+{
+	$('.loader').show();
+
+	var start = $('#datestart').val();
+	var end = $('#dateend').val();
+
+	var data = {
+		type: 'Sp_RptGroupParaSale',
+		id: $('#record').val(),
+		start: start,
+		end: end,
+	};
+
+	$.ajax({
+		url: 'ajaxFiles/branches.php',
+		type: 'POST',
+		data: data,
+		async: true,
+		dataType: 'json',
+		error: function(resp){},
+		success: function(resp){
+			Sp_RptGroupParaSale_Load(resp);
+			$('.loader').hide();
+		}
+	});
+}
+
+
+function Sp_RptGroupParaSale_Load(data)
+{
+	var tbody = '';
+	var lang = {Active:'فعال',Inactive:'غیر فعال'};
+	$('#Sp_RptGroupParaSale tbody').empty();
+	for (var i = 0; i < data.length ; i++)
+	{
+		tbody += '<tr><td>'+data[i].EAN_Code+'</td>';
+		tbody += '<td>'+data[i].GName+'</td>';
+		tbody += '<td>'+data[i].ParaName+'</td>';
+		tbody += '<td style="text-align:left;">'+data[i].Price+'</td>';
+		tbody += '<td style="text-align:center;">'+data[i].DocDate+'</td></tr>';
+	}
+	$('#Sp_RptGroupParaSale tbody').append(tbody);
+
+	var datatable = $('#Sp_RptGroupParaSale').DataTable({
+	info: false,
+        lengthMenu: [ 5, 10],
+        pagingType: "full_numbers",
+        scroller:  true,
+        responsive: true,
+        language: {
+                "emptyTable":     "داده یافت نشد !",
+                "loadingRecords": "در حال خواند اطلاعات",
+                "processing":     "در حال پردازش",
+                "search":         "جستجو ",
+                "zeroRecords":    "موردی یافت نشد !",
+                "lengthMenu":     "نمایش _MENU_ سطر در هر صفحه",
+                "paginate": {
+                    "first":      "اولین",
+                    "last":       "آخرین",
+                    "next":       "بعدی",
+                    "previous":   "قبلی"
+                },
+            }
+    	});
+
+    	$('#Sp_RptGroupParaSale_paginate').parent().removeClass('col-sm-6');
+    	$('#Sp_RptGroupParaSale_paginate').parent().addClass('col-sm-12');
 }

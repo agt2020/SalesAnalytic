@@ -1,41 +1,28 @@
 <?php
 session_start();
-
 if (empty($_SESSION["username"]))
 {
     header("Location: logout.php");
     die();
 }
-
 include('utils.php');
 $db = new db();
 $config = $db->config();
-
-// $server = '5.134.193.177';
-// $database = '4AGT';
-// $username = 'sa';
-// $password = 'Pa_12345';
-// $connection = mssql_connect($server, $username, $password);
-// if(mssql_select_db($database, $connection))
-//     echo 'OK';
-// else
-//     echo 'NOK';
-
-// $query = "SELECT TABLE_NAME
-// FROM INFORMATION_SCHEMA.TABLES
-// WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='4AGT'";
-// //$query = "SELECT * FROM Goods";
-// $query = "SELECT * FROM whs_qtydocd";
-// $result = mssql_query($query, $connection);
-// $i = 0;
-// while ($row = mssql_fetch_array($result))
-// {
-//     $i++;
-//     echo "<hr>";
-//     print_r($row);
-// }
-// echo "<br>".$i;
 include 'lang/fa_dashboard.php';
+
+// NUMBER OF CURRENT USER MESSAGES
+$num_messages = sizeof($db->Messages());
+$num_of_invoice = 0;
+if ($db->Get_NUMBEROF_INVOICE(1) != '')
+{
+    $num_of_invoice = $db->Get_NUMBEROF_INVOICE(1);
+}
+$num_of_refounded_invoice = 0;
+if ($db->Get_NUMBEROF_REFOUNDED_INVOICE(1) != '')
+{
+    $num_of_refounded_invoice = $db->Get_NUMBEROF_REFOUNDED_INVOICE(1);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="fa">
@@ -47,22 +34,12 @@ include 'lang/fa_dashboard.php';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title><?php echo $lang['LBL_PAGE_TITLE']; ?></title>
-
     <!-- Global Style -->
     <?php
         include 'functions/Global_Style.php';
         echo $global_style;
     ?>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 
 <body>
@@ -91,12 +68,12 @@ include 'lang/fa_dashboard.php';
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">16</div>
-                                    <div>پیغام فروشندگان!</div>
+                                    <div class="huge"><?php echo $num_messages; ?></div>
+                                    <div>پیغام ها</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="message.php?action=list">
                             <div class="panel-footer">
                                 <span class="pull-left">جزییات</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -113,12 +90,12 @@ include 'lang/fa_dashboard.php';
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">565</div>
-                                    <div>فروش موفق!</div>
+                                    <div class="huge"><?php echo $num_of_invoice; ?></div>
+                                    <div>تعداد فاکتور فروش</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="invoices.php">
                             <div class="panel-footer">
                                 <span class="pull-left">جزییات</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -135,8 +112,8 @@ include 'lang/fa_dashboard.php';
                                     <i class="fa fa-shopping-cart fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">124</div>
-                                    <div>سفارش خرید!</div>
+                                    <div class="huge">0</div>
+                                    <div>سفارش خرید</div>
                                 </div>
                             </div>
                         </div>
@@ -157,12 +134,12 @@ include 'lang/fa_dashboard.php';
                                     <i class="fa fa-support fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">13</div>
-                                    <div>برگشتی !</div>
+                                    <div class="huge"><?php echo $num_of_refounded_invoice; ?></div>
+                                    <div>تعداد فاکتور برگشتی فروش</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="refounded_invoices.php">
                             <div class="panel-footer">
                                 <span class="pull-left">جزییات</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -236,7 +213,7 @@ include 'lang/fa_dashboard.php';
                                         <table class="table table-bordered table-hover table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>کد</th>
                                                     <th>نام گروه</th>
                                                     <th>تعداد</th>
                                                     <th>تاریخ</th>
@@ -248,26 +225,26 @@ include 'lang/fa_dashboard.php';
                                                 $database = $config['sale_server']['database'];
                                                 $username = $config['sale_server']['username'];
                                                 $password = $config['sale_server']['password'];
-                                                ini_set('mssql.charset', 'UTF-8');
-                                                $connection = mssql_connect($server, $username, $password);
-                                                if(mssql_select_db($database, $connection))
-                                                {
-                                                    $query = "Sp_RptGroupParaSale '1397/07/01','1397/12/01',501,1";
-                                                    $result = mssql_query($query, $connection);
-                                                    $i = 1;
-                                                    while ($row = mssql_fetch_array($result))
-                                                    {
-                                                        //mb_detect_encoding($row['GName'], mb_detect_order(), true) === 'UTF-8' ? $row['GName'] : mb_convert_encoding($row['GName'], 'UTF-8');
-                                                        echo "<tr>
-                                                            <td>".$i."</td>
-                                                            <td>".$row['GName']."</td>
-                                                            <td>".$row['QTY']."</td>
-                                                            <td>".$row['DocDate']."</td>
-                                                        </tr>";
-                                                        $i++;
-                                                    }
-                                                    $result = 'OK';
-                                                }
+                                                // ini_set('mssql.charset', 'UTF-8');
+                                                // $connection = mssql_connect($server, $username, $password);
+                                                // if(mssql_select_db($database, $connection))
+                                                // {
+                                                //     $query = "Sp_RptGroupParaSale '1397/07/01','1397/12/01',501,1";
+                                                    // $result = mssql_query($query, $connection);
+                                                    // $i = 1;
+                                                    // while ($row = mssql_fetch_array($result))
+                                                    // {
+                                                    //     //mb_detect_encoding($row['GName'], mb_detect_order(), true) === 'UTF-8' ? $row['GName'] : mb_convert_encoding($row['GName'], 'UTF-8');
+                                                    //     echo "<tr>
+                                                    //         <td>".$i."</td>
+                                                    //         <td>".$row['GName']."</td>
+                                                    //         <td>".$row['QTY']."</td>
+                                                    //         <td>".$row['DocDate']."</td>
+                                                    //     </tr>";
+                                                    //     $i++;
+                                                    // }
+                                                //     $result = 'OK';
+                                                // }
                                             ?>
                                             </tbody>
                                         </table>

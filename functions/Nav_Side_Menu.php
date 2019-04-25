@@ -3,6 +3,29 @@ include '../utils.php';
 $user = $_SESSION['Current_User'];
 $access = json_decode(base64_decode($user['access']));
 
+// CURRENT USER MESSAGES
+$message_menu = '';
+$messages = $db->Messages();
+
+if (sizeof($messages))
+{
+    foreach ($messages as $key => $value)
+    {
+        $message_menu .= '<li>
+                            <a href="message.php?record='.$value['id'].'">
+                                <div>
+                                    <strong>'.$value['destination_user_name'].'</strong>
+                                    <span class="pull-left text-muted">
+                                        <em>دیروز</em>
+                                    </span>
+                                </div>
+                                <div>'.$value['title'].'</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>';
+    }
+}
+
 include 'lang/fa_nav_side_menu.php';
 $menu = '<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -15,51 +38,16 @@ $menu = '<nav class="navbar navbar-default navbar-static-top" role="navigation" 
                 <a class="navbar-brand" href="dashboard.php">'.$lang['LBL_DASHBOARD'].'</a>
             </div>
             <!-- /.navbar-header -->
-
+            <a href="message.php?action=compose" class="btn btn-success pull-left" style="margin:7px;"><i class="fa fa-envelope fa-fw"></i> ارسال پیام</a>
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-messages">
+                        '.$message_menu.'
                         <li>
-                            <a href="#">
-                                <div>
-                                    <strong>ابوالفضل غفاری</strong>
-                                    <span class="pull-left text-muted">
-                                        <em>دیروز</em>
-                                    </span>
-                                </div>
-                                <div>شعبه چالوس خارج از دسترس</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>ایمان شعاری</strong>
-                                    <span class="pull-left text-muted">
-                                        <em>دیروز</em>
-                                    </span>
-                                </div>
-                                <div>سفارشات تحویل گرفته شد و به انبار منتقل شد</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>ابوالفضل غفاری</strong>
-                                    <span class="pull-left text-muted">
-                                        <em>دیروز</em>
-                                    </span>
-                                </div>
-                                <div>سفارشات جدید ارسال شد با انبار هماهنگ شود</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
+                            <a class="text-center" href="message.php?action=list">
                                 <strong>'.$lang['LBL_ALL_MESSAGE'].'</strong>
                                 <i class="fa fa-angle-left"></i>
                             </a>
@@ -229,16 +217,17 @@ $menu = '<nav class="navbar navbar-default navbar-static-top" role="navigation" 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <!--<li class="sidebar-search">
-                            <div class="input-group custom-search-form">
+                        <li class="sidebar-search" style="text-align:center;">
+                            <lable><span id="clock"></span> '.Fa_Today().'</lable>
+                            <!--<div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="'.$lang['LBL_SEARCH'].'">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            </div>
-                        </li>-->';
+                            </div>-->
+                        </li>';
 if (1)
 {
                        $menu .= '<li>
@@ -253,61 +242,13 @@ else
 if ($user['is_admin'] == 1 || $access->analytics == 1)
 {
                       $menu .= '<li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>'.$lang['LBL_ANALITYC_CHART'].'<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>'.$lang['LBL_REPORTS'].'<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#">'.$lang['LBL_FLOAT'].'</a>
+                                    <a href="total_reports.php">'.$lang['LBL_TOTAL'].'</a>
                                 </li>
                                 <li>
-                                    <a href="#">'.$lang['LBL_MORIS'].'</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>';
-}
-else
-{
-
-}
-if ($user['is_admin'] == 1 || $access->sales_table == 1)
-{
-                       $menu .= ' <li>
-                            <a href="#"><i class="fa fa-table fa-fw"></i>'.$lang['LBL_SALE_TABLES'].'</a>
-                        </li>';
-}
-else
-{
-
-}
-if ($user['is_admin'] == 1 || $access->orders == 1)
-{
-                        $menu .= ' <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i>'.$lang['LBL_ORDERS'].'</a>
-                        </li>';
-}
-else
-{
-
-}
-if ($user['is_admin'] == 1)
-{
-                        $menu .= '<li>
-                            <a href="#"><i class="fa fa-wrench fa-fw"></i>'.$lang['LBL_SETTINGS'].'<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="settings_config.php">'.$lang['LBL_DATABASE'].'</a>
-                                </li>
-                                <li>
-                                    <a href="branches.php">'.$lang['LBL_BRANCHES'].'</a>
-                                </li>
-                               <!--<li>
-                                    <a href="#">'.$lang['LBL_ACCOUNTS'].'</a>
-                                </li>
-                                <li>
-                                    <a href="#">'.$lang['LBL_INVENTORY'].'</a>
-                                </li>-->
-                                <li>
-                                    <a href="users.php">'.$lang['LBL_USERS'].'</a>
+                                    <a href="top10.php">'.$lang['LBL_TOP_10'].'</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -354,6 +295,60 @@ if ($user['is_admin'] == 1 || $access->branches == 1)
                             <!-- /.nav-second-level -->
                         </li>';
 }
+if ($user['is_admin'] == 1 || $access->sales_table == 1)
+{
+            $menu .= ' <li>
+                <a href="#">
+                    <i class="fa fa-table fa-fw"></i>'.$lang['LBL_SALE_TABLES'].'<span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="invoices.php">'.$lang['LBL_INVOICES'].'</a>
+                    </li>
+                    <li>
+                        <a href="refounded_invoices.php">'.$lang['LBL_REFOUNDED_INVOICES'].'</a>
+                    </li>
+                </ul>
+            </li>';
+}
+else
+{
+
+}
+if ($user['is_admin'] == 1 || $access->orders == 1)
+{
+            $menu .= ' <li class="disabled">
+                <a href="#"><i class="fa fa-edit fa-fw"></i>'.$lang['LBL_ORDERS'].'</a>
+            </li>';
+}
+else
+{
+
+}
+if ($user['is_admin'] == 1)
+{
+                        $menu .= '<li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i>'.$lang['LBL_SETTINGS'].'<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="settings_config.php">'.$lang['LBL_DATABASE'].'</a>
+                                </li>
+                                <li>
+                                    <a href="branches.php">'.$lang['LBL_BRANCHES'].'</a>
+                                </li>
+                               <!--<li>
+                                    <a href="#">'.$lang['LBL_ACCOUNTS'].'</a>
+                                </li>
+                                <li>
+                                    <a href="#">'.$lang['LBL_INVENTORY'].'</a>
+                                </li>-->
+                                <li>
+                                    <a href="users.php">'.$lang['LBL_USERS'].'</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>';
+}
                         $menu .= '<!--<li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i>'.$lang['LBL_DOCUMENTS'].'<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -372,7 +367,27 @@ if ($user['is_admin'] == 1 || $access->branches == 1)
             <!-- /.navbar-static-side -->
         </nav>';
 
-
-
-
-
+?>
+<script src="vendor/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        startTime();
+    });
+    function startTime()
+    {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('clock').innerHTML =
+        h + ":" + m + ":" + s;
+        var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i)
+    {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+    }
+</script>
